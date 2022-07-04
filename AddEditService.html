@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <style>
+            body {
+                background-image: url("./images/background.jpg"); 
+                background-size: 1085px 870px;
+                background-repeat: no-repeat;
+            }
+            .navbar {
+                    height:100px;
+            }
+            .navlist {
+                    margin: 0px auto;
+                    padding-top:30px;
+            }
+            .navlist ul {
+                list-style-type: none;
+                overflow: hidden;
+                margin:0px;
+                padding:0px;
+            }
+            .navlist-left  {
+                float:left;
+            }
+            .navlist li a {
+                display:block;
+                color: white;
+                margin:0px 10px;
+                text-decoration:none;
+                font-size:28px;
+                font-family: Agency FB;
+                transition: 0.50s;
+                padding:3px 20px;
+                border: 2px solid transparent;
+                background-color:rgba(0,0,0,0.4);
+                border-radius: 20px;
+            }
+            .navlist ul li a:hover {
+                background: rgba(202, 193, 193, 0.5);
+                color: rgba(1,0,0,0.8);
+            }
+            #outter-block {
+                margin:0% 5%;
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 20px 30px;
+                border-radius: 15px;
+            }
+            #ser-list {
+                overflow-y:auto;
+                overflow-x: hidden;
+                height:420px;
+            }
+            #outter-block h1 {
+                text-align: center;
+                font-size: 40px;
+                margin: 0px;
+            }
+            footer p{
+                text-align: center;
+                font-size:20px;
+                font-weight: bold;
+                color:rgba(255, 255, 255, 0.5);
+                padding-top: 20px;
+            }
+            #empty-list{
+                text-align: center;
+                margin: 140px 0px;
+                font-size: 30px;
+            }
+            #add-service input{
+                width: 198px;
+                height: 30px;
+                font-size: 20px;
+                margin-right: 9px;
+            }
+            #add-service lable {
+                font-size: 20px;
+            }
+            .btn {
+                font-size:20px;
+                border: none;
+                border-radius: 5px;
+                background: rgba(1,0,0,0.5);
+                padding: 6px 8px;
+                outline: none;
+                transition: 0.50s;
+                cursor: pointer;
+                text-align: center;
+            }
+            .btn:hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            table {
+                width:100%;
+                table-layout: fixed;
+                border-bottom: 1px solid black;
+            }
+            #block1{
+                border-bottom: 2px solid black;
+            }
+            #block1 h2{
+                margin:4px;
+            }
+        </style>
+        <title>Edit/Add Service</title>
+    </head>
+    <body>
+        <section class="navbar">
+            <nav class="navlist">
+                <ul>
+                    <li style="float:right;"><a href="./ServiceBill.html">Logout</a></li>
+                    <li class="navlist-left"><a href="./ActivityLogs.html">Activity Logs</a></li>
+                    <li class="navlist-left"><a href="./StaffDetails.html">Staff Details</a></li>
+                    <li class="navlist-left"><a href="./StaffAttendence.html">Staff Attendance</a></li>
+                    <li class="navlist-left"><a href="./StaffSalary.html">Staff Salary</a></li>
+                </ul>
+            </nav>
+        </section>
+        <section id="outter-block">
+            <h1>Edit/Add Service</h1>
+            <div id="block1">
+                <h2>Add Service</h2>
+                <form id="add-service">
+                    <lable>Category:</lable>
+                    <input id="hdInp" type="text" list="ser-category">
+                    <datalist id="ser-category"></datalist>
+                    <lable>Service:</lable>
+                    <input id="serInp" type="text">
+                    <lable>Rate:</lable>
+                    <input id="rteInp" type="number">
+                    <span id="add-btn" class="btn">Add</span>
+                </form>
+            </div>
+            <div id="ser-list"></div>
+        </section>
+        <footer>
+            <p>Developed by Brendon Rodrigues</p>
+        </footer>
+        <script src="./AddEditService.js"></script>
+    </body>
+</html>

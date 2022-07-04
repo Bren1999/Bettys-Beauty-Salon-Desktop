@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Manager Login </title>
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                background-image: url("./images/background.jpg"); 
+                background-size: 1085px 870px;
+                background-repeat: no-repeat;
+            }
+            .navbar {
+                    height:100px;
+            }
+            .navlist {
+                    margin: 0px auto;
+                    padding-top:30px;
+            }
+            .navlist ul {
+              list-style-type: none;
+              overflow: hidden;
+              margin:0px;
+              padding:0px;
+            }
+            .navlist-left  {
+                    float:left;
+            }
+            .navlist li a {
+                    display:block;
+                    color: white;
+                    margin:0px 10px;
+                    text-decoration:none;
+                    font-size:28px;
+                    font-family: Agency FB;
+                    transition: 0.50s;
+                    padding:3px 20px;
+                    border: 2px solid transparent;
+                    background-color:rgba(0,0,0,0.4);
+                    border-radius: 20px;
+            }
+            .navlist ul li a:hover {
+                background: rgba(202, 193, 193, 0.5);
+                color: rgba(1,0,0,0.8);
+            }
+            #outter-block {
+                margin:8% 28%;
+                text-align: center;
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 40px 20px;
+                border-radius: 15px;
+                visibility: hidden;
+            }
+            #outter-block img {
+                width: 100px;
+                height: 100px;
+            }
+            .form_input {
+                font-size:20px;
+                text-align: center;
+                border: none;
+                border-bottom: 2px solid black;
+                background-color: transparent;
+                margin-bottom:10px;
+                padding: 12px 5px;
+                width:300px;
+                outline: none;
+            }
+            .form_input::placeholder{
+                color: #000;
+                opacity: 0.8;
+            }
+            .form_submit {
+                font-size:20px;
+                font-weight: bold;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                background: rgba(1,0,0,0.5);
+                margin-bottom:10px;
+                padding: 12px 5px;
+                width:340px;
+                outline: none;
+                transition: 0.50s;
+                /* color: white; */
+            }
+            .span_form_submit :hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            footer p{
+                text-align: center;
+                font-size:20px;
+                font-weight: bold;
+                color:rgba(255, 255, 255, 0.5);
+                padding-top: 60px;
+            }
+            #load{
+                width:100%;
+                height:100%;
+                position:fixed;
+                z-index:9999;
+                background:url("./images/loading.gif") no-repeat center center
+            }
+        </style>
+    </head>
+    <body>
+        <div id="load"></div>
+        <section class="navbar">
+            <nav class="navlist">
+                <ul>
+                    <li class="navlist-left"><a href="./ServiceBill.html">Service Bill</a></li>
+                    <li class="navlist-left"><a href="./ProductBill.html">Product Bill</a></li>
+                    <li class="navlist-left"><a href="./ServiceCatalog.html">Service Catalog</a></li>
+                </ul>
+            </nav>
+        </section>
+        <div id="outter-block">
+            <img src='./images/Betty.png'>
+            <h1>Betty Rodrigues</h1>
+            <form  name="ManagerForm" onsubmit="return loginn()"> 
+                <input type="password" class="form_input" id="password" placeholder="Enter Password" ><br><br>
+                <span class="span_form_submit">
+                    <input type="submit" class="form_submit" id="login" value="Login">
+                </span>
+            </form>
+        </div>
+        <footer>
+            <p>Developed by Brendon Rodrigues</p>
+        </footer>
+        <script>
+            let remote = require('electron').remote;
+            const { ipcRenderer} = require('electron');
+            const sqlite3 = require('sqlite3').verbose();
+            const db = new sqlite3.Database('./sqlite/salon.db');
+            let dialog = remote.dialog;
+            function loginn() {
+                var name = "Betty";
+                var password = $('#password');
+                if(password.val()==""){
+                    dialog.showMessageBox({message:"Please Enter Your Password",title:"Error Message"},()=>{});
+                    return false;
+                }else{
+                    'use strict';
+                    const oracledb = require('oracledb');
+                    const dbConfig = require('./dbconfig.js');
+                    
+                    async function run() {
+                    let connection;
+                    try {
+                        // Get a non-pooled connection
+                        connection = await oracledb.getConnection(dbConfig);
+                        let result = await connection.execute(
+                            `select * from system where name = :name and password = :password`,
+                            [name,password.val()],
+                            {
+                                resultSet: true // return a ResultSet (default is false)
+                            }
+                        );
+                        const rs = result.resultSet;
+                        let row;
+                        if ((row = await rs.getRow())) {
+                            ipcRenderer.send('newWindow','ActivityLogs.html'); 
+                        }else{
+                            dialog.showMessageBox({message:"Invalid Password",title:"Error Message"},()=>{});
+                            
+                        }
+                        await rs.close();
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        if (connection) {
+                        try {
+                            await connection.close();
+                        } catch (err) {
+                            console.error(err);
+                        }
+                        }
+                    }
+                    }
+                    run();
+                    // db.serialize(function(){
+                    // db.all("SELECT * FROM system where name = ? and password = ? ",
+                    //     [name,password.val()], function(err, rows) {
+                    //     if (err) {
+                    //         return console.error(err.message);
+                    //     }
+                    //     if(rows.length==0){
+                    //         dialog.showMessageBox({message:"Invalid Password",title:"Error Message"},()=>{});
+                    //         $('#password').val("");
+                    //         return false;
+                    //     }else{
+                    //         db.close();
+                    //         ipcRenderer.send('newWindow','ActivityLogs.html'); 
+                    //     }
+                    // });
+                // })
+                    return false;
+                }
+            }
+            document.onreadystatechange = function () {
+                var state = document.readyState
+                if (state == 'interactive') {
+                    document.getElementById('outter-block').style.visibility="hidden";
+                } else if (state == 'complete') {
+                    setTimeout(function(){
+                        document.getElementById('interactive');
+                        document.getElementById('load').style.visibility="hidden";
+                        document.getElementById('outter-block').style.visibility="visible";
+                    },1000);
+                }
+            }
+        </script>
+    </body>
+</html>

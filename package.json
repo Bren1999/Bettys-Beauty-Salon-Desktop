@@ -1,0 +1,24 @@
+{
+  "name": "salon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": "Brendon Rodrigues",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^8.2.3",
+    "electron-cookies": "^1.1.0",
+    "jquery": "^3.5.0",
+    "jsdom": "^16.2.2",
+    "oracledb": "^4.2.0",
+    "sqlite3": "^4.2.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^22.7.0",
+    "electron-rebuild": "^1.11.0"
+  }
+}

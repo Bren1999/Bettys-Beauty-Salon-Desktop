@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <style>
+            body {
+                background-image: url("./images/background.jpg"); 
+                background-size: 1085px 870px;
+                background-repeat: no-repeat;
+            }
+            .navbar {
+                    height:100px;
+            }
+            .navlist {
+                    margin: 0px auto;
+                    padding-top:30px;
+            }
+            .navlist ul {
+              list-style-type: none;
+              overflow: hidden;
+              margin:0px;
+              padding:0px;
+            }
+            .navlist-left  {
+                    float:left;
+            }
+            .navlist li a {
+                    display:block;
+                    color: white;
+                    margin:0px 10px;
+                    text-decoration:none;
+                    font-size:28px;
+                    font-family: Agency FB;
+                    transition: 0.50s;
+                    padding:3px 20px;
+                    border: 2px solid transparent;
+                    background-color:rgba(0,0,0,0.4);
+                    border-radius: 20px;
+            }
+            .navlist ul li a:hover {
+                background: rgba(202, 193, 193, 0.5);
+                color: rgba(1,0,0,0.8);
+            }
+            #outter-block {
+                margin:0% 5%;
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 20px 30px;
+                border-radius: 15px;
+                visibility: hidden;
+            }
+            #ser-list {
+                height:500px;
+                overflow-y:auto;
+                overflow-x: hidden;
+                margin:0px 220px;
+            }
+            #outter-block h1 {
+                text-align: center;
+                font-size: 40px;
+                margin: 0px;
+            }
+            footer p{
+                text-align: center;
+                font-size:20px;
+                font-weight: bold;
+                color:rgba(255, 255, 255, 0.5);
+                padding-top: 20px;
+            }
+            #empty-list{
+                text-align: center;
+                margin: 200px 0px;
+                font-size: 30px;
+            }
+            table {
+                width:100%;
+                table-layout: fixed;
+                border-bottom: 1px solid black;
+            }
+            .sRow{
+                float:right;
+            }
+            #load{
+                width:100%;
+                height:100%;
+                position:fixed;
+                z-index:9999;
+                background:url("./images/loading.gif") no-repeat center center
+            }
+        </style>
+        <title>Service Catalog</title>
+    </head>
+    <body>
+        <div id="load"></div>
+        <section class="navbar">
+            <nav class="navlist">
+                <ul>
+                    <li class="navlist-left"><a href="./ServiceBill.html">Service Bill</a></li>
+                    <li class="navlist-left"><a href="./ProductBill.html">Product Bill</a></li>
+                    <li style="float:right"><a href="./ManagerLogin.html">Betty's Login</a></li>
+                </ul>
+            </nav>
+        </section>
+        <section id="outter-block">
+            <h1>Service Catalog</h1>
+            <div>
+                <img style="position: absolute; height: 434px; width: 200px; margin-top: 10px;" src="images/Salon1.jpg">
+                <img style="position: absolute; height: 434px; width: 200px; margin-top: 10px; margin-left: 700px;" src="images/Salon2.jpg">
+                
+            </div>
+            <div id="ser-list"></div>
+        </section>
+        <footer>
+            <p>Developed by Brendon Rodrigues</p>
+        </footer>
+        <script>
+            String.prototype.capitalize = function() {
+                return this.charAt(0).toUpperCase() + this.slice(1);
+            }
+            let remote = require('electron').remote;
+            let dialog = remote.dialog;
+            'use strict';
+            const oracledb = require('oracledb');
+            const dbConfig = require('./dbconfig.js');
+            $(document).ready(function () {
+                async function run() {
+                    let connection;
+                    var flag=0;
+                    try {
+                        // Get a non-pooled connection
+                        connection = await oracledb.getConnection(dbConfig);
+                        let result = await connection.execute(
+                            `select head from service group by head`,
+                            [],
+                            {
+                                resultSet: true // return a ResultSet (default is false)
+                            }
+                        );
+                        const rs = result.resultSet;
+                        let row;
+                        while ((row = await rs.getRow())) {
+                            var op='<h2 style="margin:2px">'+row[0].capitalize()+'</h2><table class="listt"></table>';
+                            $('#ser-list').append(op);
+                            let result1 = await connection.execute(
+                                `select name, rate from service where head = :hd`,
+                                [row[0]],
+                                {
+                                    resultSet: true // return a ResultSet (default is false)
+                                }
+                            );
+                            const rs1 = result1.resultSet;
+                            let row1;
+                            while ((row1 = await rs1.getRow())) {
+                                op1='<tr><td>'+row1[0]+'</td><td class="sRow">&#8377;'+row1[1]+'</td></tr>';
+                                $('.listt:last').append(op1);
+                            }
+                            flag=1;
+                        }
+                        if(flag==0) {
+                            var op='<p id="empty-list">No Services Added!';
+                            $('#ser-list').html(op);
+                        }
+                        await rs.close();
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        if (connection) {
+                        try {
+                            await connection.close();
+                        } catch (err) {
+                            console.error(err);
+                        }
+                        }
+                    }
+                }
+                run();
+            });
+            document.onreadystatechange = function () {
+                var state = document.readyState
+                if (state == 'interactive') {
+                    document.getElementById('outter-block').style.visibility="hidden";
+                } else if (state == 'complete') {
+                    setTimeout(function(){
+                        document.getElementById('interactive');
+                        document.getElementById('load').style.visibility="hidden";
+                        document.getElementById('outter-block').style.visibility="visible";
+                    },1000);
+                }
+            }
+        </script>
+    </body>
+</html>

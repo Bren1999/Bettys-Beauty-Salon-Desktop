@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <title>Staff Details</title>
+        <style>
+            body {
+                background-image: url("./images/background.jpg"); 
+                background-size: 1085px 870px;
+                background-repeat: no-repeat;
+            }
+            .navbar {
+                    height:100px;
+            }
+            .navlist {
+                    margin: 0px auto;
+                    padding-top:30px;
+            }
+            .navlist ul {
+              list-style-type: none;
+              overflow: hidden;
+              margin:0px;
+              padding:0px;
+            }
+            .navlist-left  {
+                    float:left;
+            }
+            .navlist li a {
+                    display:block;
+                    color: white;
+                    margin:0px 10px;
+                    text-decoration:none;
+                    font-size:28px;
+                    font-family: Agency FB;
+                    transition: 0.50s;
+                    padding:3px 20px;
+                    border: 2px solid transparent;
+                    background-color:rgba(0,0,0,0.4);
+                    border-radius: 20px;
+            }
+            .navlist ul li a:hover {
+                background: rgba(202, 193, 193, 0.5);
+                color: rgba(1,0,0,0.8);
+            }
+            #outter-block {
+                margin:0% 5%;
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 25px 30px;
+                border-radius: 15px;
+            }
+            #outter-block h1 {
+                text-align: center;
+                font-size: 40px;
+                margin: 0px;
+            }
+            #block1 {
+                height:105px;
+                border-bottom: 2px solid black;
+            }
+            #staff-list {
+                height:370px;
+                overflow-y:auto;
+                overflow-x: hidden;
+            }
+            footer p{
+                text-align: center;
+                font-size:20px;
+                font-weight: bold;
+                color:rgba(255, 255, 255, 0.5);
+                padding-top: 35px;
+            }
+            .btn {
+                font-size:20px;
+                border: none;
+                border-radius: 5px;
+                background: rgba(1,0,0,0.5);
+                padding: 6px 70px;
+                outline: none;
+                transition: 0.50s;
+                cursor: pointer;
+                text-align: center;
+                margin: 8px 300px;
+            }
+            .btn:hover, .btn1:hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            .btn1 {
+                font-size:20px;
+                border: none;
+                border-radius: 5px;
+                background: rgba(224, 39, 39, 0.5);
+                padding: 6px 10px;
+                outline: none;
+                transition: 0.50s;
+                cursor: pointer;
+                text-align: center;
+            }
+            .detail{
+                float:left;
+                margin-left:3px;
+                margin-top: 8px;
+                font-size: 20px;
+            }
+            .detail input {
+                height: 20px;
+                font-size: 20px;
+                width:170px;
+            }
+            #empty-list{
+                text-align: center;
+                margin: 140px 0px;
+                font-size: 30px;
+            }
+            table{
+                font-size: 20px;
+                width:100%;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <section class="navbar">
+            <nav class="navlist">
+                <ul>
+                    <li style="float:right;"><a href="./ServiceBill.html">Logout</a></li>
+                    <li class="navlist-left"><a href="./ActivityLogs.html">Activity Logs</a></li>
+                    <li class="navlist-left"><a href="./AddEditService.html">Add/Edit Services</a></li>
+                    <li class="navlist-left"><a href="./StaffAttendence.html">Staff Attendance</a></li>
+                    <li class="navlist-left"><a href="./StaffSalary.html">Staff Salary</a></li>
+                </ul>
+            </nav>
+        </section>
+        <section id="outter-block">
+            <h1>Staff Details</h1>
+            <div id="block1">
+                <form id="add-service">
+                    <div class="detail">
+                        <lable>Name</lable><br>
+                        <input id="nmInp" type="text">
+                    </div>
+                    <div class="detail">
+                        <lable>Address</lable><br>
+                        <input id="addInp" type="text">
+                    </div>
+                    <div class="detail">
+                        <lable>Mobile No</lable><br>
+                        <input id="mbnInp" type="number">
+                    </div>
+                    <div class="detail">
+                        <lable>Basic Salary</lable><br>
+                        <input id="salInp" type="number">
+                    </div>
+                    <div class="detail">
+                        <lable>Commission</lable><br>
+                        <input id="comInp" type="number">
+                    </div>
+                    <div>
+                        <button id="reg-btn" class="btn">Register Staff</button>
+                    </div>
+                </form>
+            </div>
+            <div id="staff-list"></div>
+        </section>
+        <footer>
+            <p>Developed by Brendon Rodrigues</p>
+        </footer>
+        <script>
+            let remote = require('electron').remote;
+            let dialog = remote.dialog;
+            'use strict';
+            const oracledb = require('oracledb');
+            const dbConfig = require('./dbconfig.js');
+            $(document).ready(function () {
+                async function run() {
+                    let connection;
+                    var flag=0;
+                    try {
+                        // Get a non-pooled connection
+                        connection = await oracledb.getConnection(dbConfig);
+                        let result = await connection.execute(
+                            `select * from staff`,
+                            [],
+                            {
+                                resultSet: true // return a ResultSet (default is false)
+                            }
+                        );
+                        const rs = result.resultSet;
+                        let row;
+                        var op='<table class="listt"><th>Staff Name</th><th>Mobile No</th><th>Address</th><th>Salary</th><th>Commission</th></table>';
+                        $('#staff-list').append(op);
+                        while ((row = await rs.getRow())) {
+                            op1='<tr><td>'+row[0]+'</td><td>'+row[1]+'</td><td>'+row[2]+'</td><td>&#8377;'+row[3]+'</td><td>'+row[4]+'%</td><td class="btn1 edit-btn">Edit</td><td class="btn1 del-btn">Remove</td></tr>';
+                            $('.listt:last').append(op1);
+                            flag=1;
+                        }
+                        if(flag==0) {
+                            var op='<p id="empty-list">No Staff Registered!<br>Register a Staff</p>';
+                            $('#staff-list').html(op);
+                        }
+                        await rs.close();
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        if (connection) {
+                        try {
+                            await connection.close();
+                        } catch (err) {
+                            console.error(err);
+                        }
+                        }
+                    }
+                }
+                run();
+                $('#reg-btn').click(function(){
+                    var name = $('#nmInp').val();
+                    var address = $('#addInp').val();
+                    var mobNo = $('#mbnInp').val();
+                    var salary = $('#salInp').val();
+                    var commission = $('#comInp').val();
+                    if(name==""||address==""||mobNo==""||salary==""||commission==""){
+                        dialog.showMessageBox({message: "Empty Details",title:"Error!"},()=>{});
+                    }else{
+                        async function run1() {
+                            try {
+                                connection = await oracledb.getConnection(dbConfig);
+                                let result = await connection.execute(
+                                    `INSERT INTO STAFF VALUES (:NM,:MB,:AD,:SL,:CM)`,
+                                    [name,mobNo, address, salary, commission],
+                                    {autoCommit: true} 
+                                );
+                                var mes = name+" is Registered!";
+                                dialog.showMessageBox({message: mes,title:"Successfull Message"},()=>{});
+                            } catch (err) {
+                                console.error(err);
+                            } finally {
+                                if (connection) {
+                                try {
+                                    await connection.close();
+                                } catch (err) {
+                                    console.error(err);
+                                }
+                                }
+                            }
+                        }
+                        run1();
+                    }
+                });
+                $(document.body).on("click",'.del-btn', function (){
+                    var name = $(this).siblings().html();
+                    async function run3() {
+                        try {
+                            connection = await oracledb.getConnection(dbConfig);
+                            let result = await connection.execute(
+                                `DELETE FROM STAFF WHERE NAME = :NM`,
+                                [name], 
+                                {autoCommit: true} 
+                            );
+                            var mes = name+" is unregistered!";
+                            dialog.showMessageBox({message: mes,title:"Successfull Message"},()=>{});
+                            location.reload();
+                        } catch (err) {
+                            console.error(err);
+                        } finally {
+                            if (connection) {
+                            try {
+                                await connection.close();
+                            } catch (err) {
+                                console.error(err);
+                            }
+                            }
+                        }
+                    }
+                    run3();
+                });
+            });
+            $(document.body).on("click",'.edit-btn', function (){
+                var name = $(this).siblings().html();
+                var mobNo = $(this).prev().prev().prev().prev().html();
+                var address = $(this).prev().prev().prev().html();
+                var salary = $(this).prev().prev().html().replace(/[^0-9]/gi, '');
+                var commission = $(this).prev().html().replace(/[^0-9]/gi, ''); 
+                var op = '<h2 style="margin:0px">'+name+'</h2><form id="edit-staff">'+
+                        '<div class="detail"><lable>Mobile No</lable><br>'+
+                        '<input id="mbn" value='+mobNo+' type="number"></div>'+
+                        '<div class="detail"><lable>Address</lable><br>'+
+                        '<input id="add" value='+address+' type="text"></div>'+
+                        '<div class="detail"><lable>Salary</lable><br>'+
+                        '<input id="sal" value='+salary+' type="number"></div>'+
+                        '<div class="detail"><lable>Commission</lable><br>'+
+                        '<input id="com" value='+commission+' type="number"></div>'+
+                        '<button style="margin:8px;" id="ed-btn" class="btn1">EDIT DETAILS</button>'+
+                        '</form>'
+                $('#block1').html(op);
+                $(document.body).on("click",'#ed-btn', function (){
+                    var mobNo1= $('#mbn').val();
+                    var address1 = $('#add').val();
+                    var salary1 = $('#sal').val();
+                    var commission1 = $('#com').val();
+                    async function run4() {
+                        try {
+                            connection = await oracledb.getConnection(dbConfig);
+                            let result = await connection.execute(
+                                `UPDATE Staff SET MOBILENO = :mno, ADDRESS = :ad, SALARY = :sa, COMMISSION = :co WHERE NAME = :nmm`,
+                                [mobNo1, address1, salary1, commission1, name],
+                                {autoCommit: true} 
+                            );
+                            var mes = "Staff Details Changed!";
+                            dialog.showMessageBox({message: mes,title:"Successfull Message"},()=>{});
+                        } catch (err) {
+                            console.error(err);
+                        } finally {
+                            if (connection) {
+                            try {
+                                await connection.close();
+                            } catch (err) {
+                                console.error(err);
+                            }
+                            }
+                        }
+                    }
+                    run4();
+                });
+            });
+        </script>
+    </body>
+</html>

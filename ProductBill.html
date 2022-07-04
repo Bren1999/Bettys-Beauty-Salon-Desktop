@@ -1,0 +1,384 @@
+<html>
+    <head>
+        <title>Product Bill</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <style>
+            body {
+                background-image: url("./images/background.jpg"); 
+                background-size: 1085px 870px;
+                background-repeat: no-repeat;
+            }
+            .navbar {
+                    height:100px;
+            }
+            .navlist {
+                    margin: 0px auto;
+                    padding-top:30px;
+            }
+            .navlist ul {
+              list-style-type: none;
+              overflow: hidden;
+              margin:0px;
+              padding:0px;
+            }
+            .navlist-left  {
+                    float:left;
+            }
+            .navlist li a {
+                    display:block;
+                    color: white;
+                    margin:0px 10px;
+                    text-decoration:none;
+                    font-size:28px;
+                    font-family: Agency FB;
+                    transition: 0.50s;
+                    padding:3px 20px;
+                    border: 2px solid transparent;
+                    background-color:rgba(0,0,0,0.4);
+                    border-radius: 20px;
+            }
+            .navlist ul li a:hover {
+                background: rgba(202, 193, 193, 0.5);
+                color: rgba(1,0,0,0.8);
+            }
+            #outter-block {
+                margin:0% 5%;
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 20px 30px;
+                border-radius: 15px;
+                visibility: hidden;
+            }
+            #outter-block h1 {
+                text-align: center;
+                font-size: 40px;
+                margin: 0px;
+            }
+            #inner-block1{
+                padding:20px 0px;
+            }
+            .details {
+                padding-right: 40px;
+            }
+            .details input, select{
+                width: 200px;
+                height: 30px;
+                font-size: 20px;
+            }
+            .inner-block2{
+                float: left;
+            }
+            p{
+                margin:0px;
+                font-size: 25px;
+            }
+            #totalAmount{
+                font-size: 50px;
+                color: blue;
+            }
+            #amount-block{
+                float: right;
+                padding-left:-30px;
+            }
+            #block5{
+                margin: 25px 0px;
+            }
+            #block5 span {
+                font-size:20px;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                background: rgba(5, 1, 41, 0.534);
+                margin-bottom:10px;
+                padding: 12px 5px;
+                width:340px;
+                outline: none;
+                transition: 0.1s;
+                cursor: pointer;
+                color:white;
+            }
+            #block5 span:hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            #form_submit{
+                text-align: center;
+            }
+            #form_submit input{
+                font-size:20px;
+                font-weight: bold;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                background: rgba(1,0,0,0.5);
+                margin-bottom:10px;
+                padding: 12px 5px;
+                width:340px;
+                outline: none;
+                transition: 0.50s;
+                cursor: pointer;
+            }
+            #form_submit input:hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            #service-list {
+                width:100%;
+                /* border: 2px solid black; */
+                display:block;
+                overflow-y:auto;
+                overflow-x: hidden;
+                height:192px;
+                background-color: #cacaca;
+            }
+            .sr-clm{
+                width: 30px;
+                text-align: center;
+            }
+            .first-clm {
+                width: 394px;
+            }
+            .second-clm {
+                width: 170px;
+            }
+            .third-clm {
+                width: 110px;
+            }
+            .fourth-clm {
+                width:140px;
+            }
+            .rowTot {
+                font-size: 28px;
+                margin: 0px;
+                text-align:right;
+            }
+            #service-list tr td input {
+                width:100%;
+                height: 31px;
+                font-size: 30px;
+                border:none;
+            }
+            td{
+                border:2px solid black;
+                margin: 0px;
+            }
+            #service-list-h {
+                width:100%;
+                /* border: 2px solid black; */
+                display:block;
+                overflow-y:auto;
+                overflow-x: hidden;
+            }
+            #service-list-h td {
+                height: 31px;
+                font-size: 20px;
+                text-align: center;
+                border:2px solid black;
+                background-color: #aaa; 
+            }
+            footer p{
+                text-align: center;
+                font-size:20px;
+                font-weight: bold;
+                color:rgba(255, 255, 255, 0.5);
+                padding-top: 60px;
+            }
+            #load{
+                width:100%;
+                height:100%;
+                position:fixed;
+                z-index:9999;
+                background:url("./images/loading.gif") no-repeat center center 
+            }
+        </style>
+    </head>
+    <body>
+        <div id="load"></div>
+        <section class="navbar">
+            <nav class="navlist">
+                <ul>
+                    <li class="navlist-left"><a href="./ServiceBill.html">Service Bill</a></li>
+                    <li class="navlist-left"><a href="./ServiceCatalog.html">Service Catalog</a></li>
+                    <li style="float:right"><a href="./ManagerLogin.html">Betty's Login</a></li>
+                </ul>
+            </nav>
+        </section>
+        <section id="outter-block">
+            <h1>Product Bill</h1>
+            <div>
+                <div id="amount-block" >
+                    <p>Total Amount<br> Rs.<span id="totalAmount">00</span>.00</p><br>
+                </div>
+                <form id="ServiceBill"> 
+                    <div id="inner-block1">
+                        <div class="inner-block2">
+                            <div class="details">
+                                <p>Client's Name</p>
+                                <input type="text"  id="clientName" placeholder="Enter Clients name">
+                            </div>
+                        </div>
+                        <div class="details" >
+                            <p>Date of Purchase</p>
+                            <input type="date"  id="serviceDate" ><br>
+                        </div>
+                    </div>
+                    <div>
+                        <table  id="service-list-h" > 
+                            <tr>
+                                <td class="sr-clm">#</td>
+                                <td class="first-clm">PRODUCT NAME</td>
+                                <td class="second-clm">PRODUCT PRICE</td>
+                                <td class="third-clm">QUANTITY</td>
+                                <td class="fourth-clm">TOTAL</td>
+                            </tr>
+                        </table>
+                        <table id="service-list">
+                            <tr id="tr-list">
+                                <td class="sr-clm">1</td>
+                                <td class="first-clm"><input type="text"  class="servicesDone"></td>
+                                <td class="second-clm"><input type="number" class="servicesPrice"></td>
+                                <td class="third-clm"><input type="number" class="proQuantity"></td>
+                                <td class="fourth-clm rowTot"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="block5">
+                        <span id="addMore" >Add Row</span>
+                        <span id="calcTot" >Calculate Total</span><br>
+                    </div>    
+                    <div id="form_submit">
+                        <input type="button" id="serviceBill" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </section>
+        <footer>
+            <p>Developed by Brendon Rodrigues</p>
+        </footer>
+        <script>
+            let remote = require('electron').remote;
+            let dialog = remote.dialog;
+            var productPrice = new Array();
+            var productName = new Array();
+            var totalAmount = 0;
+            var quantity=new Array();
+            var scnt = 2;
+            $("#addMore").click(function (){
+                var tr = $("#tr-list").clone();
+                tr.children('td:first').text(scnt++);
+                tr.children('td:last').text("");
+                tr.appendTo("#service-list").find("input").val("");
+                $("#service-list").scrollTop(tr.position().top);
+                totalAmount = 0;
+                $("#totalAmount").html("00");
+            });
+            $("#calcTot").click(function (){
+                totalAmount = 0;
+                $("input.servicesDone").each(function (index){
+                    productName[index] =  $(this).val();
+                });
+                $("input.servicesPrice").each(function (index){
+                    productPrice[index] =  parseInt($(this).val());
+                });
+                $(".proQuantity").each(function(index){
+                    quantity[index] = parseInt($(this).val());
+                });
+                $(".rowTot").each(function(index){
+                    $(this).html(productPrice[index]*quantity[index]);
+                    totalAmount = totalAmount + parseInt($(this).html());
+                });
+                if(totalAmount>0||!isNaN(totalAmount)){
+                    $("#totalAmount").html(totalAmount);
+                }else{
+                    totalAmount = 0;
+                    $("#totalAmount").html("00");
+                    dialog.showMessageBox({message:"Invalid Quantity or Rate",title:"Error Message"},()=>{});
+                }
+            });
+            $("#serviceBill").click(function(){
+                var clientName = $('#clientName').val();
+                var proDate = $('#serviceDate').val();
+                if(clientName===""|| proDate===""|| totalAmount===0){
+                    dialog.showMessageBox({message:"Please Enter All the Details",title:"Error Message"},()=>{});
+                }else{
+                    var d = new Date(proDate);
+                    // const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    //     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    // var purchaseDate = d.getDate()+"-"+month[d.getMonth()]+"-"+d.getFullYear();
+                    var purchaseDate = d.getFullYear()+"-"+('0' + (d.getMonth()+1)).slice(-2) +"-"+('0' +(d.getDate())).slice(-2);
+                    let remote = require('electron').remote;
+                    let dialog = remote.dialog;
+                    'use strict';
+                    const sqlite3 = require('sqlite3').verbose();
+                    const db = new sqlite3.Database('./sqlite/salon.db');
+                    // const oracledb = require('oracledb');
+                    // const dbConfig = require('./dbconfig.js');
+                    // async function run1() {
+                    // try {
+                    //     connection = await oracledb.getConnection(dbConfig);
+                    //     let result = await connection.execute(
+                    //         `INSERT INTO PRODUCTLOG(CLIENT_NAME,PURCHASE_DATE) VALUES (:cl,:pd)`,
+                    //         [clientName, purchaseDate ],
+                    //         { autoCommit: true } 
+                    //     );
+                    //     for(var i=0; i<scnt-1; i++){
+                    //         let result1 = await connection.execute(
+                    //             `INSERT INTO PRODUCTSOLD VALUES(:pn,:pr,:pq,(SELECT max(ID) FROM PRODUCTLOG))`,
+                    //             [productName[i],productPrice[i],quantity[i]],
+                    //             { autoCommit: true } 
+                    //         );
+                    //     }
+                    //     var mes = "Thank You! Please don't forget to collect Rs. "+totalAmount+" from "+clientName;
+                    //     dialog.showMessageBox({message: mes,title:"Successfull Message"},()=>{});
+                    //     location.reload();
+                    // } catch (err) {
+                    //     console.error(err);
+                    // } finally {
+                    //     if (connection) {
+                    //     try {
+                    //         await connection.close();
+                    //     } catch (err) {
+                    //         console.error(err);
+                    //     }
+                    //     }
+                    // }
+                    // }
+                    // run1();
+                    db.serialize(function(){
+                        db.run("INSERT INTO PRODUCTLOG(CLIENT_NAME,PURCHASE_DATE) VALUES (?,?)",
+                            [clientName, purchaseDate ], function(err) {
+                            if (err) {
+                            return console.log(err.message);
+                            }
+                            for(var i=0; i<scnt-1; i++){
+                                db.run("INSERT INTO PRODUCTSOLD VALUES((SELECT max(pro_ID) FROM PRODUCTLOG),?,?,?)",
+                                [productName[i],productPrice[i],quantity[i]], function(err) {
+                                    if (err) {
+                                    return console.log(err.message);
+                                    }
+                                });
+                            }
+                            var mes = "Thank You! Please don't forget to collect Rs. "+totalAmount+" from "+clientName;
+                            dialog.showMessageBox({message: mes,title:"Successfull Message"},()=>{});
+                            db.close();
+                            location.reload();
+                        });
+                    });
+                }
+            });
+            document.onreadystatechange = function () {
+                var state = document.readyState
+                if (state == 'interactive') {
+                    document.getElementById('outter-block').style.visibility="hidden";
+                } else if (state == 'complete') {
+                    setTimeout(function(){
+                        document.getElementById('interactive');
+                        document.getElementById('load').style.visibility="hidden";
+                        document.getElementById('outter-block').style.visibility="visible";
+                    },1000);
+                }
+            }
+        </script>
+    </body>
+</html>

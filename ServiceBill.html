@@ -1,0 +1,260 @@
+<html>
+    <head>
+        <title>Service Bill</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <style>
+            body {
+                background-image: url("./images/background.jpg"); 
+                background-size: 1085px 870px;
+                background-repeat: no-repeat;
+            }
+            .navbar {
+                    height:100px;
+            }
+            .navlist {
+                    margin: 0px auto;
+                    padding-top:30px;
+            }
+            .navlist ul {
+              list-style-type: none;
+              overflow: hidden;
+              margin:0px;
+              padding:0px;
+            }
+            .navlist-left  {
+                    float:left;
+            }
+            .navlist li a {
+                    display:block;
+                    color: white;
+                    margin:0px 10px;
+                    text-decoration:none;
+                    font-size:28px;
+                    font-family: Agency FB;
+                    transition: 0.50s;
+                    padding:3px 20px;
+                    border: 2px solid transparent;
+                    background-color:rgba(0,0,0,0.4);
+                    border-radius: 20px;
+            }
+            .navlist ul li a:hover {
+                background: rgba(202, 193, 193, 0.5);
+                color: rgba(1,0,0,0.8);
+            }
+            #outter-block {
+                margin:0% 5%;
+                background-color: rgba(255, 255, 255, 0.6);
+                padding: 20px 30px;
+                border-radius: 15px;
+                visibility: hidden;
+            }
+            #outter-block h1 {
+                text-align: center;
+                font-size: 40px;
+                margin: 0px;
+            }
+            #inner-block1{
+                padding:20px 0px;
+            }
+            .details {
+                padding-right: 40px;
+            }
+            .details input, select{
+                width: 200px;
+                height: 30px;
+                font-size: 20px;
+            }
+            .inner-block2{
+                float: left;
+            }
+            p{
+                margin:0px;
+                font-size: 25px;
+            }
+            #totalAmount{
+                font-size: 50px;
+                color: blue;
+            }
+            #amount-block{
+                float: right;
+                padding-left:-30px;
+            }
+            #block5{
+                margin: 25px 0px;
+            }
+            #block5 span {
+                font-size:20px;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                background: rgba(5, 1, 41, 0.534);
+                margin-bottom:10px;
+                padding: 12px 5px;
+                width:340px;
+                outline: none;
+                transition: 0.1s;
+                cursor: pointer;
+                color:white;
+            }
+            #block5 span:hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            #form_submit{
+                text-align: center;
+            }
+            #form_submit input{
+                font-size:20px;
+                font-weight: bold;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                background: rgba(1,0,0,0.5);
+                margin-bottom:10px;
+                padding: 12px 5px;
+                width:340px;
+                outline: none;
+                transition: 0.50s;
+                cursor: pointer;
+            }
+            #form_submit input:hover {
+                background: rgba(1,0,0,0.3);
+                color: rgba(1,0,0,0.8);
+            }
+            #service-list {
+                width:100%;
+                /* border: 2px solid black; */
+                display:block;
+                overflow-y:auto;
+                overflow-x: hidden;
+                height:192px;
+                background-color: #cacaca;
+            }
+            .sr-clm{
+                width: 30px;
+                text-align: center;
+            }
+            .first-clm {
+                width: 660px;
+                
+            }
+            .second-clm {
+                width: 170px;
+            }
+            #service-list tr td input {
+                width:100%;
+                height: 31px;
+                font-size: 30px;
+                border:none;
+            }
+            td{
+                border:2px solid black;
+                margin: 0px;
+            }
+            #service-list-h {
+                width:100%;
+                /* border: 2px solid black; */
+                display:block;
+                overflow-y:auto;
+                overflow-x: hidden;
+            }
+            #service-list-h td {
+                height: 31px;
+                font-size: 20px;
+                text-align: center;
+                border:2px solid black;
+                background-color: #aaa; 
+            }
+            footer p{
+                text-align: center;
+                font-size:20px;
+                font-weight: bold;
+                color:rgba(255, 255, 255, 0.5);
+                padding-top: 60px;
+            }
+            #load{
+                width:100%;
+                height:100%;
+                position:fixed;
+                z-index:9999;
+                background:url("./images/loading.gif") no-repeat center center 
+            }
+        </style>
+        
+    </head>
+    <body>
+        <div id="load"></div>
+        <section class="navbar">
+            <nav class="navlist">
+                <ul>
+                    <li class="navlist-left"><a href="./ProductBill.html">Product Bill</a></li>
+                    <li class="navlist-left"><a href="./ServiceCatalog.html">Service Catalog</a></li>
+                    <li style="float:right"><a href="./ManagerLogin.html">Betty's Login</a></li>
+                    
+                </ul>
+            </nav>
+        </section>
+        
+        <section id="outter-block">
+
+            <h1>Service Bill</h1>
+            <div>
+                <div id="amount-block" >
+                    <p>Total Amount<br> Rs.<span id="totalAmount">00</span>.00</p><br>
+                </div>
+                <form id="ServiceBill"> 
+                    <div id="inner-block1">
+                        <div class="inner-block2">
+                            <div class="details">
+                                <p>Staff's Name</p>
+                                <select id="serviceProvider">
+                                    <option selected disabled>Choose here</option>
+                                    <option>Betty Rodrigues</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="inner-block2">
+                            <div class="details">
+                                <p>Client's Name</p>
+                                <input type="text"  id="clientName" placeholder="Enter Clients name">
+                            </div>
+                        </div>
+                        <div class="details" >
+                            <p>Date</p>
+                            <input type="date"  id="serviceDate" ><br>
+                        </div>
+                    </div>
+                    <div>
+                        <table  id="service-list-h" > 
+                            <tr>
+                                <td class="sr-clm">#</td>
+                                <td class="first-clm">SERVICE NAME</td>
+                                <td class="second-clm">SERVICE PRICE</td>
+                            </tr>
+                        </table>
+                        <table id="service-list">
+                            <tr id="tr-list">
+                                <td class="sr-clm">1</td>
+                                <td class="first-clm"><input type="text"  class="servicesDone"></td>
+                                <td class="second-clm"><input type="number" class="servicesPrice"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="block5">
+                        <span id="addMore" >Add Row</span>
+                        <span id="calcTot" >Calculate Total</span><br>
+                    </div>    
+                    <div id="form_submit">
+                        <input type="button" id="serviceBill" value="Submit">
+                    </div>
+                </form>
+            </div>
+            <script src="./ServiceBill.js" type="text/JavaScript"></script>
+        </section>
+        <footer>
+            <p>Developed by Brendon Rodrigues</p>
+        </footer>
+    </body>
+</html>
